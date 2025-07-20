@@ -195,7 +195,7 @@ function setupShareholderMetrics() {
   metricsContainer.innerHTML = `
     <h3>Shareholder Value Metrics</h3>
     <div class="management-praise">
-      <p>Under the exceptional leadership of our management team, we continue to exceed expectations and drive outstanding shareholder value.</p>
+      <p>Despite our incompetent management team of a*holes, we somehow manage to create shareholder value. They're the worst!</p>
     </div>
     <div class="metric">
       <span>Player Engagement:</span>
