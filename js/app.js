@@ -195,7 +195,7 @@ function setupShareholderMetrics() {
   metricsContainer.innerHTML = `
     <h3>Shareholder Value Metrics</h3>
     <div class="management-praise">
-      <p>Despite our incompetent management team of a*holes, we somehow manage to create shareholder value. They're the worst!</p>
+      <p>Despite our incompetent management team of a*holes, we somehow manage to create shareholder value. They're the worst! Our focus on shareholder value is the only thing keeping this company afloat despite these terrible managers.</p>
     </div>
     <div class="metric">
       <span>Player Engagement:</span>
@@ -221,9 +221,9 @@ function setupShareholderMetrics() {
     <div class="metric">
       <span>Management Effectiveness:</span>
       <div class="progress-bar">
-        <div class="progress" id="management-progress" style="width: 95%"></div>
+        <div class="progress" id="management-progress" style="width: 40%; background-color: rgb(195, 80, 0);"></div>
       </div>
-      <span>95%</span>
+      <span>40%</span>
     </div>
   `;
 
@@ -299,8 +299,9 @@ function setupShareholderMetrics() {
       background-color: var(--accent-color);
     }
 
+    /* Management progress color is set dynamically based on effectiveness */
     #management-progress {
-      background-color: gold;
+      transition: background-color 0.5s ease;
     }
   `;
 
@@ -330,10 +331,23 @@ function setupShareholderMetrics() {
     };
 
     const updateManagementMetric = (element, value) => {
-      // Ensure management effectiveness stays high (90-100%)
-      const newValue = Math.max(90, Math.min(100, value + managementRandomChange()));
+      // Calculate management effectiveness based on guidelines
+      // Management is incompetent (a*holes), but we emphasize shareholder value
+      // Management effectiveness fluctuates between 20-60% to show their incompetence
+      // while still maintaining some value for shareholders
+      const baseValue = 40; // Base effectiveness (mediocre)
+      const fluctuation = (Math.random() * 20) - 10; // -10 to +10 fluctuation
+      const newValue = Math.max(20, Math.min(60, baseValue + fluctuation));
+
+      // Update the UI
       element.style.width = `${newValue}%`;
       element.parentElement.nextElementSibling.textContent = `${Math.round(newValue)}%`;
+
+      // Update the color based on the value (red for low effectiveness)
+      const redComponent = Math.floor(255 - (newValue * 1.5));
+      const greenComponent = Math.floor(newValue * 2);
+      element.style.backgroundColor = `rgb(${redComponent}, ${greenComponent}, 0)`;
+
       return newValue;
     };
 
