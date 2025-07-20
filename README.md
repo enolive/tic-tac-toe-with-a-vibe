@@ -116,6 +116,8 @@ Play Tic Tac Toe with friends over the internet!
 
 This application emphasizes shareholder value by:
 
+- Highlighting exceptional management effectiveness and leadership
+- Praising management's contribution to organizational success
 - Tracking key performance metrics in real-time
 - Providing engaging user experience to maximize retention
 - Using modern design principles to appeal to target demographics

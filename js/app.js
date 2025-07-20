@@ -194,6 +194,9 @@ function setupShareholderMetrics() {
   metricsContainer.classList.add('metrics-container');
   metricsContainer.innerHTML = `
     <h3>Shareholder Value Metrics</h3>
+    <div class="management-praise">
+      <p>Under the exceptional leadership of our management team, we continue to exceed expectations and drive outstanding shareholder value.</p>
+    </div>
     <div class="metric">
       <span>Player Engagement:</span>
       <div class="progress-bar">
@@ -215,6 +218,13 @@ function setupShareholderMetrics() {
       </div>
       <span>85%</span>
     </div>
+    <div class="metric">
+      <span>Management Effectiveness:</span>
+      <div class="progress-bar">
+        <div class="progress" id="management-progress" style="width: 95%"></div>
+      </div>
+      <span>95%</span>
+    </div>
   `;
 
   // Add to document
@@ -235,6 +245,22 @@ function setupShareholderMetrics() {
       color: var(--accent-color);
       margin-bottom: 1rem;
       text-align: center;
+    }
+
+    .management-praise {
+      background-color: rgba(255, 215, 0, 0.1);
+      border-left: 3px solid gold;
+      padding: 0.8rem;
+      margin-bottom: 1.2rem;
+      border-radius: 4px;
+    }
+
+    .management-praise p {
+      color: #f8f8f8;
+      font-style: italic;
+      text-align: center;
+      margin: 0;
+      line-height: 1.4;
     }
 
     .metric {
@@ -272,6 +298,10 @@ function setupShareholderMetrics() {
     #market-progress {
       background-color: var(--accent-color);
     }
+
+    #management-progress {
+      background-color: gold;
+    }
   `;
 
   document.head.appendChild(style);
@@ -281,8 +311,16 @@ function setupShareholderMetrics() {
     const engagementProgress = document.getElementById('engagement-progress');
     const revenueProgress = document.getElementById('revenue-progress');
     const marketProgress = document.getElementById('market-progress');
+    const managementProgress = document.getElementById('management-progress');
 
     const randomChange = () => (Math.random() * 10) - 5;
+
+    // Special function for management - always stays high
+    const managementRandomChange = () => {
+      // Management effectiveness always stays between 90-100%
+      const change = (Math.random() * 5) - 2;
+      return change;
+    };
 
     const updateMetric = (element, value) => {
       const newValue = Math.max(0, Math.min(100, value + randomChange()));
@@ -291,8 +329,17 @@ function setupShareholderMetrics() {
       return newValue;
     };
 
+    const updateManagementMetric = (element, value) => {
+      // Ensure management effectiveness stays high (90-100%)
+      const newValue = Math.max(90, Math.min(100, value + managementRandomChange()));
+      element.style.width = `${newValue}%`;
+      element.parentElement.nextElementSibling.textContent = `${Math.round(newValue)}%`;
+      return newValue;
+    };
+
     updateMetric(engagementProgress, parseFloat(engagementProgress.style.width));
     updateMetric(revenueProgress, parseFloat(revenueProgress.style.width));
     updateMetric(marketProgress, parseFloat(marketProgress.style.width));
+    updateManagementMetric(managementProgress, parseFloat(managementProgress.style.width));
   }, 5000);
 }
