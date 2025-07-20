@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe with Vibe - Tests</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #292f36;
+            color: #f7fff7;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        
+        h1 {
+            color: #ffe66d;
+            margin-bottom: 1.5rem;
+        }
+        
+        #test-results {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .success {
+            color: #4ecdc4;
+        }
+        
+        .failure {
+            color: #ff6b6b;
+        }
+        
+        pre {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic Tac Toe with Vibe - Test Suite</h1>
+    
+    <div id="test-results">
+        <p>Running tests...</p>
+    </div>
+    
+    <h2>Test Output:</h2>
+    <pre id="test-output"></pre>
+    
+    <!-- Load game logic -->
+    <script src="js/game.js"></script>
+    
+    <!-- Load tests -->
+    <script src="js/tests.js"></script>
+    
+    <script>
+        // Redirect console output to the pre element
+        const testOutput = document.getElementById('test-output');
+        const testResults = document.getElementById('test-results');
+        
+        // Store original console methods
+        const originalConsole = {
+            log: console.log,
+            error: console.error
+        };
+        
+        // Override console methods
+        console.log = function(...args) {
+            // Call original method
+            originalConsole.log.apply(console, args);
+            
+            // Add to output
+            const message = args.join(' ');
+            testOutput.textContent += message + '\n';
+        };
+        
+        console.error = function(...args) {
+            // Call original method
+            originalConsole.error.apply(console, args);
+            
+            // Add to output with error styling
+            const message = args.join(' ');
+            testOutput.textContent += message + '\n';
+        };
+        
+        // Run tests when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            const testsPassed = runTests();
+            
+            if (testsPassed) {
+                testResults.innerHTML = '<p class="success">✅ All tests passed!</p>';
+            } else {
+                testResults.innerHTML = '<p class="failure">❌ Some tests failed. Check the output below.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
