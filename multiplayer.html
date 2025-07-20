@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Tic Tac Toe with Vibe</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Additional styles for multiplayer */
+        .tab {
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .tab button {
+            background-color: transparent;
+            color: var(--light-color);
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+        
+        .tab button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .tab button.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--accent-color);
+        }
+        
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--light-color);
+        }
+        
+        .form-group button {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .form-group button:hover {
+            background-color: #ffd83d;
+        }
+        
+        #waiting-screen {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        #room-link {
+            display: block;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: var(--accent-color);
+            word-break: break-all;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .notification.info {
+            background-color: var(--secondary-color);
+        }
+        
+        .notification.error {
+            background-color: var(--primary-color);
+        }
+        
+        .player-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .player-info .player {
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        .player-info .player.x {
+            background-color: rgba(255, 107, 107, 0.3);
+        }
+        
+        .player-info .player.o {
+            background-color: rgba(78, 205, 196, 0.3);
+        }
+        
+        .player-info .player.active {
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 230, 109, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="notification" class="notification info"></div>
+    
+    <div class="container">
+        <h1>Multiplayer Tic Tac Toe with Vibe</h1>
+        
+        <!-- Lobby Screen -->
+        <div id="lobby">
+            <div class="tab">
+                <button class="tablinks active" onclick="openTab(event, 'create-game')" id="create-game-tab">Create Game</button>
+                <button class="tablinks" onclick="openTab(event, 'join-game')" id="join-game-tab">Join Game</button>
+            </div>
+            
+            <div id="create-game" class="tabcontent" style="display: block;">
+                <form id="create-game-form">
+                    <div class="form-group">
+                        <label for="create-player-name">Your Name:</label>
+                        <input type="text" id="create-player-name" required placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Create Game</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="join-game" class="tabcontent">
+                <form id="join-game-form">
+                    <div class="form-group">
+                        <label for="join-player-name">Your Name:</label>
+                        <input type="text" id="join-player-name" required placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="room-id">Game Code:</label>
+                        <input type="text" id="room-id" required placeholder="Enter game code">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Join Game</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Waiting Screen -->
+        <div id="waiting-screen">
+            <h2>Waiting for an opponent...</h2>
+            <p>Share this link with a friend to play together:</p>
+            <a id="room-link" href="#" target="_blank"></a>
+            <p>Or share the game code: <span id="room-code"></span></p>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game-container" style="display: none;">
+            <div class="player-info">
+                <div class="player x">Player X: <span id="player-x-name"></span></div>
+                <div class="player o">Player O: <span id="player-o-name"></span></div>
+            </div>
+            
+            <div id="game-status" class="status">Waiting for game to start...</div>
+            <div id="game-board" class="board">
+                <!-- Game board will be generated by JavaScript -->
+            </div>
+            <button id="reset-button" class="reset-btn">Reset Game</button>
+        </div>
+    </div>
+    
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    
+    <!-- Game Scripts -->
+    <script src="js/multiplayer-game.js"></script>
+    <script src="js/multiplayer-ui.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Initialize the multiplayer game
+        document.addEventListener('DOMContentLoaded', () => {
+            // Connect to the server
+            const socket = io('http://localhost:3000');
+
+            // Create a new multiplayer game instance
+            const game = new MultiplayerGame(socket);
+            
+            // Create a new UI instance with the game
+            const ui = new MultiplayerUI(game);
+            
+            // Initialize the lobby
+            ui.initLobby();
+            
+            // Add vibe elements
+            addVibeElements();
+            
+            console.log('Multiplayer Tic Tac Toe with Vibe initialized!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Test - Tic Tac Toe with Vibe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #292f36;
+            color: #f7fff7;
+            line-height: 1.6;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ffe66d;
+            margin-bottom: 1.5rem;
+        }
+
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        button {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            margin: 0.5rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .success {
+            color: #4ecdc4;
+        }
+
+        .failure {
+            color: #ff6b6b;
+        }
+
+        .pixabay-credit {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Sound Test - Tic Tac Toe with Vibe</h1>
+
+        <p>Click the buttons below to test the sound effects from local assets:</p>
+
+        <div>
+            <button id="test-click">Test Click Sound</button>
+            <button id="test-win">Test Win Sound</button>
+            <button id="test-draw">Test Draw Sound</button>
+        </div>
+
+        <div class="result" id="result">
+            <p>Results will appear here...</p>
+        </div>
+
+        <p>
+            <a href="index.html" style="color: #4ecdc4;">Back to Game</a>
+        </p>
+
+        <div class="pixabay-credit">
+            <p>Sound effects from local assets directory</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize sound effects
+        document.addEventListener('DOMContentLoaded', () => {
+            // Create audio elements with local assets
+            const clickSound = document.createElement('audio');
+            clickSound.id = 'click-sound';
+            clickSound.src = 'assets/slap-hurt-pain-sound-effect-262618.mp3';
+            clickSound.preload = 'auto';
+
+            const winSound = document.createElement('audio');
+            winSound.id = 'win-sound';
+            winSound.src = 'assets/slap-hurt-pain-sound-effect-262618.mp3';
+            winSound.preload = 'auto';
+
+            const drawSound = document.createElement('audio');
+            drawSound.id = 'draw-sound';
+            drawSound.src = 'assets/slap-hurt-pain-sound-effect-262618.mp3';
+            drawSound.preload = 'auto';
+
+            // Add to document
+            document.body.appendChild(clickSound);
+            document.body.appendChild(winSound);
+            document.body.appendChild(drawSound);
+
+            // Function to play sounds
+            function playSound(soundType) {
+                const sound = document.getElementById(`${soundType}-sound`);
+                if (sound) {
+                    sound.currentTime = 0;
+                    sound.play().then(() => {
+                        document.getElementById('result').innerHTML = `
+                            <p class="success">Playing ${soundType} sound from local assets...</p>
+                        `;
+                    }).catch(e => {
+                        console.log('Audio play failed:', e);
+                        document.getElementById('result').innerHTML = `
+                            <p class="failure">Failed to play ${soundType} sound: ${e.message}</p>
+                            <p>This might be due to browser autoplay restrictions. Try clicking the button again.</p>
+                        `;
+                    });
+                }
+            }
+
+            // Add event listeners to test buttons
+            document.getElementById('test-click').addEventListener('click', () => {
+                playSound('click');
+            });
+
+            document.getElementById('test-win').addEventListener('click', () => {
+                playSound('win');
+            });
+
+            document.getElementById('test-draw').addEventListener('click', () => {
+                playSound('draw');
+            });
+        });
+    </script>
+</body>
+</html>
